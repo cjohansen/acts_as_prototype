@@ -20,7 +20,7 @@ class PrototypeTest < Test::Unit::TestCase
 
 #    Property.set("prop1", 1)
 #    acc1.properties.set("prop2", 2)
-raise acc1.prototype.inspect
+#raise acc1.prototype.inspect
 #    assert_equal 1, acc1[:prop1]
 #    assert_equal 1, acc2[:prop1]
 #    assert_equal 2, acc1[:prop2]
