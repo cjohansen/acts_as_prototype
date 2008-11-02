@@ -1,0 +1,19 @@
+account1:
+  id: 1
+  configurable_id: 1
+  configurable_type: Account
+
+account2:
+  id: 2
+  configurable_id: 2
+  configurable_type: Account
+
+project1:
+  id: 3
+  configurable_id: 1
+  configurable_type: Project
+
+project2:
+  id: 4
+  configurable_id: 2
+  configurable_type: Project
