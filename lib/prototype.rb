@@ -16,7 +16,7 @@ class Prototype < ActiveRecord::Base
   #
   # Method is aliased as []
   #
-  def get_property(prop)
+  def get(prop)
     prop = prop.to_sym
     return @props[prop] unless @props.nil? || !@props.key?(prop)
 
@@ -27,27 +27,38 @@ class Prototype < ActiveRecord::Base
       if self.prototype.nil?
         @props[prop] = Property.get(prop)
       else
-        @props[prop] = self.prototype[prop]
+        @props[prop] = self.prototype.get(prop)
       end
     end
 
-    raise ArgumentError.new("Property does not exist") if @props[prop].nil?
+    raise ArgumentError.new("Property #{prop} does not exist") if @props[prop].nil?
     @props[prop]
   end
 
-  alias_method :[], :get_property
+  #
+  # Returns the value of a property
+  #
+  def value(prop)
+    self.get(prop).value
+  end
 
   #
   # Sets a property for this object. Method is aliased as []=
   #
-  def set_property(prop, value)
+  def set(prop, value)
     prop = prop.to_s
     property = self.properties.find_by_name(prop)
     property ||= Property.new(:name => prop, :prototype => self)
     property.value = value
     property.save
-    value
+    @props = {} if @props.nil?
+    @props[prop.to_sym] = property
   end
 
-  alias_method :[]=, :set_property
+  #
+  # Flushes property cache
+  #
+  def flush_properties
+    @props = nil
+  end
 end
