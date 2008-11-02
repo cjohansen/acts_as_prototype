@@ -13,7 +13,7 @@ ActiveRecord::Schema.define :version => 0 do
   create_table :properties, :force => true do |t|
     t.string :name, :null => false
     t.text :value, :null => false
-    t.string :type
+    t.string :assoc_type
     t.references :prototype
   end
 

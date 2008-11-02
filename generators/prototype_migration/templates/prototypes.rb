@@ -16,7 +16,7 @@ class PrototypeMigration < ActiveRecord::Migration
     create_table :properties do |t|
       t.string :name, :null => false
       t.text :value, :null => false
-      t.string :type
+      t.string :assoc_type
       t.references :prototype
     end
 

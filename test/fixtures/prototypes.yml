@@ -7,6 +7,7 @@ account2:
   id: 2
   configurable_id: 2
   configurable_type: Account
+  prototype_id: 1
 
 project1:
   id: 3
