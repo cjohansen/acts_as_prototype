@@ -18,7 +18,6 @@ class PrototypeTest < Test::Unit::TestCase
   end
 
   def test_prototype_chain
-    # $query_count = 0
     acc1 = Prototype.find(1)
     acc2 = Prototype.find(2)
 

@@ -20,22 +20,12 @@ module ActsAsPrototype
 
   module ClassMethods
     def acts_as_prototype
+      include ActsAsPrototype::InstanceMethods
       has_one :prototype, :as => :configurable
-      alias_method_chain :initialize, :prototype
-
-      include ConfigurablePrototype::InstanceMethods
-      #extend ConfigurablePrototype::SingletonMethods
     end
   end
 
   module InstanceMethods
-    #
-    # Properties are proxied through the prototype object
-    #
-    def properties
-      self.prototype
-    end
-
     #
     # Creates a new (unsaved) object that "inherits" the properties of the this
     # object. Note that the model objects need not share anything; it's only the
@@ -53,13 +43,24 @@ module ActsAsPrototype
       object
     end
 
-   private
     #
     # Adds the prototype object when a new object is created
     #
-    def initialize_with_protoype
-      initialize_without_protoype
-      self.prototype = Prototype.new if self.prototype.nil?
+    def initialize
+      super
+
+      if self.prototype.nil?
+        self.prototype = Prototype.new(:configurable => self)
+        self.prototype.save
+      end
+    end
+
+    #
+    # Returns a property list
+    #
+    def properties
+      @properties = PropertyList.new(self.prototype) if @properties.nil?
+      @properties
     end
   end
 end

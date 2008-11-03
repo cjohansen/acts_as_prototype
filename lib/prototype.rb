@@ -42,41 +42,9 @@ class Prototype < ActiveRecord::Base
   #
   def set(prop, value)
     prop = prop.to_s
-    property = @props[prop.to_sym] unless @props.nil? || !@props.key?(prop.to_sym)
     property ||= self.properties.find_by_name(prop)
     property ||= Property.new(:name => prop, :prototype => self)
     property.value = value
     property.save
-
-    # Cache value
-    cache_property(property)
-  end
-
-  #
-  # Flushes property cache
-  #
-  def flush_properties
-    @props = nil
-  end
-
- private
-  #
-  # Look for property in cache before retrieving from database. If property is
-  # retrieved from database it is cached.
-  #
-  def get_with_caching(prop)
-    return @props[prop.to_sym] unless @props.nil? || !@props.key?(prop.to_sym)
-    cache_property(get_without_caching(prop))
-  end
-
-  # Add caching to get method
-  #alias_method_chain :get, :caching
-
-  #
-  # Stores a property in internal cache
-  #
-  def cache_property(property)
-    @props = {} if @props.nil?
-    @props[property.key] = property
   end
 end
