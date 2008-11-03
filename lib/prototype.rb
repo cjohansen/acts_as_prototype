@@ -14,25 +14,20 @@ class Prototype < ActiveRecord::Base
   # is checked. If no property is found on the prototype chain either, an error
   # is raised.
   #
-  # Method is aliased as []
-  #
   def get(prop)
     prop = prop.to_sym
-    return @props[prop] unless @props.nil? || !@props.key?(prop)
+    property = self.properties.find_by_name(prop.to_s)
 
-    @props = {} if @props.nil?
-    @props[prop] = self.properties.find_by_name(prop.to_s)
-
-    if @props[prop].nil?
+    if property.nil?
       if self.prototype.nil?
-        @props[prop] = Property.get(prop)
+        property = Property.get(prop)
       else
-        @props[prop] = self.prototype.get(prop)
+        property = self.prototype.get(prop)
       end
     end
 
-    raise ArgumentError.new("Property #{prop} does not exist") if @props[prop].nil?
-    @props[prop]
+    raise ArgumentError.new("Property #{prop} does not exist") if property.nil?
+    property
   end
 
   #
@@ -43,16 +38,18 @@ class Prototype < ActiveRecord::Base
   end
 
   #
-  # Sets a property for this object. Method is aliased as []=
+  # Sets a property for this object.
   #
   def set(prop, value)
     prop = prop.to_s
-    property = self.properties.find_by_name(prop)
+    property = @props[prop.to_sym] unless @props.nil? || !@props.key?(prop.to_sym)
+    property ||= self.properties.find_by_name(prop)
     property ||= Property.new(:name => prop, :prototype => self)
     property.value = value
     property.save
-    @props = {} if @props.nil?
-    @props[prop.to_sym] = property
+
+    # Cache value
+    cache_property(property)
   end
 
   #
@@ -60,5 +57,26 @@ class Prototype < ActiveRecord::Base
   #
   def flush_properties
     @props = nil
+  end
+
+ private
+  #
+  # Look for property in cache before retrieving from database. If property is
+  # retrieved from database it is cached.
+  #
+  def get_with_caching(prop)
+    return @props[prop.to_sym] unless @props.nil? || !@props.key?(prop.to_sym)
+    cache_property(get_without_caching(prop))
+  end
+
+  # Add caching to get method
+  #alias_method_chain :get, :caching
+
+  #
+  # Stores a property in internal cache
+  #
+  def cache_property(property)
+    @props = {} if @props.nil?
+    @props[property.key] = property
   end
 end

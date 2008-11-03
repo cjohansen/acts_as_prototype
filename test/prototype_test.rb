@@ -18,6 +18,7 @@ class PrototypeTest < Test::Unit::TestCase
   end
 
   def test_prototype_chain
+    # $query_count = 0
     acc1 = Prototype.find(1)
     acc2 = Prototype.find(2)
 
@@ -30,9 +31,6 @@ class PrototypeTest < Test::Unit::TestCase
     assert_equal 2, acc2.value(:prop2)
 
     acc1.set(:prop1, 34)
-    #acc2.flush_properties
-    acc2 = Prototype.find(2)
-
     assert_equal 1, Property.value(:prop1)
     assert_equal 34, acc1.value(:prop1)
     assert_equal 34, acc2.value(:prop1)
@@ -41,18 +39,6 @@ class PrototypeTest < Test::Unit::TestCase
     assert_equal 1, Property.value(:prop1)
     assert_equal 34, acc1.value(:prop1)
     assert_equal 68, acc2.value(:prop1)
-  end
-
-  def _test_cache_property
-    proto = Prototype.find(3)
-    proto.set :cached, "Value"
-
-    assert_queries 1 do
-      acc1.get :cached
-      acc1.get :cached
-      acc1.value :cached
-      acc1.value :cached
-    end
   end
 
   def test_set
