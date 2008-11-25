@@ -32,7 +32,7 @@ Now you can get properties through an instance of MyModel:
   account = Account.find 1
   account.properties[:logo_url] #=> "/images/rails.png"
 
-Override settings for single objects:
+Override settings:
 
   account.properties[:logo_url] = "/images/my_logo.png"
   account.save # Causes properties to be saved also
@@ -55,7 +55,7 @@ object:
   project.properties[:logo_url] = "/images/my_project.png"
   account.properties[:logo_url] #=> "/images/my_logo.png"
 
-Updating the original objects properties will reflect on the begotten obejcts
+Updating the original objects properties will reflect on the begotten objects
 as long as they haven't overridden properties:
 
   project.properties[:profile] #=> #<Profile id: 2...>

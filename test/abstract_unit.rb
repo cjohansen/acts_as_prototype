@@ -1,6 +1,6 @@
 #
 # This file loads up the database needed to run the tests, and adds a few
-# convenience methods. It's mostly written
+# convenience methods.
 #
 # This file is originally by Jonathan Viney, written for the
 # ActsAsTaggableOnSteroids plugin:

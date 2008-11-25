@@ -1,10 +1,11 @@
 #
 # A configurable ActiveRecord resource. The module is included in
 # ActiveRecord::Base, thus enabling all active record models to do
-# +acts_as_prototype+ which enables the following methods to the class:
+# +acts_as_prototype+ which enables the following instance methods:
 #
-# As well as the following instance methods:
-#
+#   properties
+#   prototype
+#   beget
 #
 # In other words, making an ActiveRecord class "act as prototype" means you can
 # annotate it with arbitrary properties, set up configuration cascades and
@@ -27,18 +28,19 @@ module ActsAsPrototype
 
   module InstanceMethods
     #
-    # Creates a new (unsaved) object that "inherits" the properties of the this
+    # Creates a new (unsaved) object that "inherits" the properties of this
     # object. Note that the model objects need not share anything; it's only the
-    # properties that are transerred.
+    # properties that are transferred.
     #
-    # The method accepts a single parameter which should be the class for the new
-    # object. Default is same as this object.
+    # The method accepts a two parameters: the first should be the class for the
+    # new object (default is same as this object) and the second is a hash of
+    # attributes for the new object.
     #
     # Function name is borrowed from Douglas Crockfords Object.beget for
     # JavaScript.
     #
-    def beget(type = self.class)
-      object = type.new
+    def beget(type = self.class, attributes = {})
+      object = type.new(attributes)
       object.prototype = Prototype.new(:prototype => self.prototype)
       object
     end
