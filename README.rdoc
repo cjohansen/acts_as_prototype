@@ -1,0 +1,65 @@
+= acts_as_prototype
+
+Acts as prototype allows any ActiveRecord based model object to be annotated
+with arbitrary properties. The object is given a prototype object, and through
+this it can be a part of a prototype chain, allowing a cascading property
+system which works much like JavaScripts objects and properties.
+
+== Installation
+
+  ruby script/install http://svn.cjohansen.no/rails/plugins/acts_as_prototype/trunk
+
+=== Setup database
+
+  ruby script/generate property_migration
+  rake db:migrate
+
+== Usage
+
+Properties can be set and read from the global scope like a normal model:
+
+  prop = Property.set("logo_url", "/images/rails.png")
+  prop.save
+
+Any object that should be configurable with properties should simply do this:
+
+  class Account < ActiveRecord::Base
+    acts_as_prototype
+  end
+
+Now you can get properties through an instance of MyModel:
+
+  account = Account.find 1
+  account.properties[:logo_url] #=> "/images/rails.png"
+
+Override settings:
+
+  account.properties[:logo_url] = "/images/my_logo.png"
+  account.save # Causes properties to be saved also
+
+Set new properties for single objects (ActiveRecord objects are stored by
+reference):
+
+  account.properties[:profile] = Profile.find(2)
+
+You can generate new ActiveRecord objects which share properties with another
+object:
+
+  class Project < ActiveRecord::Base
+    acts_as_prototype
+  end
+
+  project = account.beget(Project, { :name => "New project" })
+  project #=> New project object which shares properties with account
+
+  project.properties[:logo_url] = "/images/my_project.png"
+  account.properties[:logo_url] #=> "/images/my_logo.png"
+
+Updating the original objects properties will reflect on the begotten objects
+as long as they haven't overridden properties:
+
+  project.properties[:profile] #=> #<Profile id: 2...>
+  account.properties[:profile] = Profile.find(3)
+  project.properties[:profile] #=> #<Profile id: 3...>
+
+Copyright (c) 2008 Christian Johansen, released under the MIT license
