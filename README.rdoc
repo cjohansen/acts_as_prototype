@@ -7,7 +7,7 @@ system which works much like JavaScripts objects and properties.
 
 == Installation
 
-  ruby script/install http://svn.cjohansen.no/rails/plugins/acts_as_prototype/trunk
+  ruby script/install git://github.com/cjohansen/acts_as_prototype.git
 
 === Setup database
 
