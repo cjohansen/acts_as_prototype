@@ -44,7 +44,7 @@ class Test::Unit::TestCase #:nodoc:
     $query_count = 0
     yield
   ensure
-    assert_equal num, $query_count, "#{ $query_count} instead of #{ num} queries were executed."
+    assert_equal num, $query_count, "#{$query_count} instead of #{num} queries were executed."
   end
 
   def assert_no_queries(&block)
