@@ -1,10 +1,10 @@
 #
 # Generates the migrations necessary to use the acts_as_prototype plugin
 #
-class PrototypeMigrationMigrationGenerator < Rails::Generator::Base
+class PrototypeMigrationGenerator < Rails::Generator::Base
   def manifest
     record do |m|
-      m.migration_template 'migration.rb', 'db/migrate'
+      m.migration_template 'prototypes.rb', 'db/migrate'
     end
   end
 
